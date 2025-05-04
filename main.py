@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import uuid
 import sys
 
-# Load environment variables
+# Loading environment variables
 load_dotenv()
 
 # Configure logging
@@ -86,7 +86,7 @@ class ConfigManager:
     @staticmethod
     def get_db_config() -> Dict[str, str]:
         """Get database configuration from environment variables or config file"""
-        # Priority: ENV vars > config file > defaults
+        # Priority: ENV vars > config file > defaults somthing like this
         config = {
             "dbname": os.getenv("DB_NAME", "postgres"),
             "user": os.getenv("DB_USER", "postgres"),
@@ -95,13 +95,13 @@ class ConfigManager:
             "port": os.getenv("DB_PORT", "5432")
         }
         
-        # Check for config file as fallback
+        # Checking for config file as fallback
         config_file = os.getenv("CONFIG_FILE", "config.json")
         if os.path.exists(config_file):
             try:
                 with open(config_file, 'r') as f:
                     file_config = json.load(f)
-                    # Only use file values for keys that aren't set in env vars
+                    # Only using file values for keys that aren't set in env vars
                     for key, value in file_config.items():
                         if key in config and not os.getenv(f"DB_{key.upper()}"):
                             config[key] = value
@@ -113,7 +113,7 @@ class ConfigManager:
     @staticmethod
     def get_ai_config() -> Dict[str, str]:
         """Get AI configuration from environment variables"""
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("GEMINI_API_KEY") #I have deleted my gemini api key purposefully not to show it here
         model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
         
         if not api_key:
@@ -177,7 +177,7 @@ class DatabaseConnection:
                     conn.commit()
                     return result
             except psycopg2.OperationalError as e:
-                # Connection issue - attempt reconnect
+                # Connection issue - attempts reconnect
                 logger.warning(f"Database connection lost, reconnecting... ({retries+1}/{max_retries})")
                 self.conn = None
                 retries += 1
@@ -222,7 +222,7 @@ class DatabaseManager:
             if not self.test_connection():
                 return False
                 
-            # 2. Enable extensions
+            # 2. Enabling extensions
             for extension_query in SCHEMAS["extensions"]:
                 try:
                     self.db.execute_query(extension_query)
@@ -231,7 +231,7 @@ class DatabaseManager:
                     logger.error(f"Failed to enable extension: {str(e)}")
                     return False
             
-            # 3. Create tables in order (respecting dependencies)
+            # 3. Creating tables in order (respecting dependencies)
             table_order = ["patients", "appointments", "treatments", "medical_history"]
             
             for table_name in table_order:
@@ -243,7 +243,7 @@ class DatabaseManager:
                     logger.error(f"Failed to create table {table_name}: {str(e)}")
                     return False
             
-            # 4. Verify tables exist
+            # 4. Verifing tables exist
             verify_query = """
             SELECT table_name 
             FROM information_schema.tables 
@@ -272,7 +272,7 @@ class AIService:
         """Initialize AI service with configuration"""
         self.api_key = config.get("api_key")
         self.model_name = config.get("model_name", "gemini-2.0-flash")
-        self.timeout = 30  # Set a timeout for API calls (in seconds)
+        self.timeout = 30  # Set a timeout for API calls
         
         # Configure Gemini API if API key is available
         if self.api_key:
@@ -304,7 +304,7 @@ class AIService:
             Symptoms: {symptoms}
             """
             
-            # Add timeout to prevent hanging
+            # Adding timeout to prevent hanging
             import threading
             import time
             from concurrent.futures import ThreadPoolExecutor, TimeoutError
@@ -317,7 +317,7 @@ class AIService:
                     logger.error(f"Error in AI generation: {str(e)}")
                     return None
             
-            # Use a thread pool to implement a timeout
+            # Using a thread pool to implement a timeout
             with ThreadPoolExecutor() as executor:
                 future = executor.submit(generate_with_timeout)
                 try:
@@ -384,7 +384,7 @@ class AIService:
                     logger.error(f"Error in AI generation: {str(e)}")
                     return None
             
-            # Use a thread pool to implement a timeout
+            # Using a thread pool to implement a timeout
             with ThreadPoolExecutor() as executor:
                 future = executor.submit(generate_with_timeout)
                 try:
