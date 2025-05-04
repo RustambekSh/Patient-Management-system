@@ -690,13 +690,13 @@ class MainWindow(QMainWindow):
             'patient_history': self.treatment_history.toPlainText()
         }
         
-        # Create a custom progress dialog instead of a simple message box
+        # Creating a custom progress dialog instead of a simple message box
         wait_dialog = QDialog(self)
         wait_dialog.setWindowTitle("Processing AI Analysis")
         wait_dialog.setModal(True)
         wait_dialog.setFixedSize(400, 100)
         
-        # Create layout and message
+        # Creating layout and message
         layout = QVBoxLayout()
         message = QLabel("Generating AI analysis and treatment plan...\nThis may take up to 30 seconds.")
         message.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -704,10 +704,10 @@ class MainWindow(QMainWindow):
         
         wait_dialog.setLayout(layout)
         
-        # Show the dialog without blocking
+        # Showing the dialog without blocking
         wait_dialog.show()
         
-        # Create a timer to process events while waiting
+        # Creating a timer to process events while waiting
         timer = QTimer()
         timer.start(100)  # Process events every 100ms
         timer.timeout.connect(QApplication.processEvents)
