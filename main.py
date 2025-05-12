@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import json
 from psycopg2 import pool
 import google.generativeai as genai
-from dotenv import load_dotenv
+from dotenv import load_dotenv  
 import uuid
 import sys
 
