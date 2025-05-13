@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import uuid
 import sys
 
-# Loading environment variables
+# Loading environment variables  
 load_dotenv()
 
 # Configure logging
